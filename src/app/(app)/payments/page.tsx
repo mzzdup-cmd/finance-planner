@@ -5,6 +5,7 @@ import { Plus } from "lucide-react";
 import { AppHeader } from "@/components/layout/app-header";
 import { PaymentSummary } from "@/components/payments/payment-summary";
 import { PaymentItem } from "@/components/payments/payment-item";
+import { PaymentActionsSheet } from "@/components/payments/payment-actions-sheet";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,7 +15,7 @@ import { useDashboard } from "@/hooks/use-dashboard";
 import { computeDashboardStats } from "@/lib/calculations";
 import { MONTH_NAMES } from "@/lib/constants";
 import { CreditCard } from "lucide-react";
-import type { PaymentCategory, PaymentPriority } from "@/types";
+import type { PaymentCategory, PaymentInstance, PaymentPriority } from "@/types";
 
 const FILTERS = [
   { key: "all", label: "Все" },
@@ -27,6 +28,9 @@ export default function PaymentsPage() {
   const { monthPayments, month } = useDashboard();
   const togglePaymentPaid = useFinanceStore((s) => s.togglePaymentPaid);
   const addPayment = useFinanceStore((s) => s.addPayment);
+  const deletePayment = useFinanceStore((s) => s.deletePayment);
+  const postponePayment = useFinanceStore((s) => s.postponePayment);
+  const [selectedPayment, setSelectedPayment] = useState<PaymentInstance | null>(null);
   const filter = useUIStore((s) => s.paymentFilter);
   const setFilter = useUIStore((s) => s.setPaymentFilter);
   const [showAdd, setShowAdd] = useState(false);
@@ -117,11 +121,19 @@ export default function PaymentsPage() {
               key={p.id}
               payment={p}
               onTogglePaid={togglePaymentPaid}
+              onClick={() => setSelectedPayment(p)}
               index={i}
             />
           ))
         )}
       </div>
+
+      <PaymentActionsSheet
+        payment={selectedPayment}
+        onClose={() => setSelectedPayment(null)}
+        onDelete={deletePayment}
+        onPostpone={postponePayment}
+      />
 
       {showAdd && (
         <div className="fixed inset-0 z-50 flex items-end bg-black/50 backdrop-blur-sm">

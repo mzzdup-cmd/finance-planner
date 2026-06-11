@@ -5,13 +5,8 @@
 -- =============================================
 
 -- Удаляем старое (если было частично создано)
+-- CASCADE на таблицах автоматически удаляет триггеры
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
-DROP TRIGGER IF EXISTS profiles_updated_at ON profiles;
-DROP TRIGGER IF EXISTS monthly_incomes_updated_at ON monthly_incomes;
-DROP TRIGGER IF EXISTS payments_updated_at ON payments;
-DROP TRIGGER IF EXISTS payment_instances_updated_at ON payment_instances;
-DROP TRIGGER IF EXISTS savings_goals_updated_at ON savings_goals;
-DROP TRIGGER IF EXISTS vacation_trips_updated_at ON vacation_trips;
 
 DROP TABLE IF EXISTS vacation_expenses CASCADE;
 DROP TABLE IF EXISTS vacation_trips CASCADE;
