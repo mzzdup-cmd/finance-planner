@@ -17,7 +17,8 @@ export function AppShell({ children }: AppShellProps) {
   const pathname = usePathname();
   const { isHydrated } = useHydrate();
   const showSplash = useUIStore((s) => s.showSplash);
-  const hideNav = HIDE_NAV_PATHS.some((p) => pathname.startsWith(p));
+  const hideBottomNav = useUIStore((s) => s.hideBottomNav);
+  const hideNav = HIDE_NAV_PATHS.some((p) => pathname.startsWith(p)) || hideBottomNav;
 
   if (!isHydrated || showSplash) {
     return <SplashScreen />;

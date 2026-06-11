@@ -33,9 +33,12 @@ export function PaymentActionsSheet({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end bg-black/50 backdrop-blur-sm" onClick={onClose}>
+    <div
+      className="fixed inset-0 z-[100] flex items-end bg-black/50 backdrop-blur-sm"
+      onClick={onClose}
+    >
       <div
-        className="w-full rounded-t-3xl bg-card p-6 pb-[max(2rem,env(safe-area-inset-bottom))]"
+        className="max-h-[85dvh] w-full overflow-y-auto rounded-t-3xl bg-card p-6 pb-[calc(6.5rem+env(safe-area-inset-bottom))]"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-5 flex items-start justify-between">

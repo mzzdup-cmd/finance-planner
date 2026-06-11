@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Plus } from "lucide-react";
 import { AppHeader } from "@/components/layout/app-header";
 import { PaymentSummary } from "@/components/payments/payment-summary";
@@ -31,9 +31,15 @@ export default function PaymentsPage() {
   const deletePayment = useFinanceStore((s) => s.deletePayment);
   const postponePayment = useFinanceStore((s) => s.postponePayment);
   const [selectedPayment, setSelectedPayment] = useState<PaymentInstance | null>(null);
+  const [showAdd, setShowAdd] = useState(false);
   const filter = useUIStore((s) => s.paymentFilter);
   const setFilter = useUIStore((s) => s.setPaymentFilter);
-  const [showAdd, setShowAdd] = useState(false);
+  const setHideBottomNav = useUIStore((s) => s.setHideBottomNav);
+
+  useEffect(() => {
+    setHideBottomNav(!!selectedPayment || showAdd);
+    return () => setHideBottomNav(false);
+  }, [selectedPayment, showAdd, setHideBottomNav]);
   const [newTitle, setNewTitle] = useState("");
   const [newAmount, setNewAmount] = useState("");
 
@@ -136,8 +142,8 @@ export default function PaymentsPage() {
       />
 
       {showAdd && (
-        <div className="fixed inset-0 z-50 flex items-end bg-black/50 backdrop-blur-sm">
-          <div className="w-full rounded-t-3xl bg-card p-6 pb-[max(2rem,env(safe-area-inset-bottom))]">
+        <div className="fixed inset-0 z-[100] flex items-end bg-black/50 backdrop-blur-sm">
+          <div className="w-full rounded-t-3xl bg-card p-6 pb-[calc(6.5rem+env(safe-area-inset-bottom))]">
             <h3 className="mb-4 text-lg font-semibold">Новый платёж</h3>
             <div className="space-y-3">
               <Input
@@ -164,6 +170,7 @@ export default function PaymentsPage() {
         </div>
       )}
 
+      {!selectedPayment && !showAdd && (
       <Button
         size="icon"
         className="fixed bottom-28 right-5 z-40 h-14 w-14 rounded-2xl shadow-xl shadow-accent/30"
@@ -171,6 +178,7 @@ export default function PaymentsPage() {
       >
         <Plus className="h-6 w-6" />
       </Button>
+      )}
     </div>
   );
 }
