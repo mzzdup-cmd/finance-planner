@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 20% 97%;
+    --foreground: 220 20% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 20% 10%;
+    --muted: 220 14% 92%;
+    --muted-foreground: 220 10% 46%;
+    --border: 220 13% 88%;
+    --accent: 160 100% 42%;
+    --accent-foreground: 0 0% 100%;
+    --premium: 230 90% 62%;
+    --destructive: 0 78% 62%;
+    --success: 160 84% 39%;
+    --warning: 38 92% 50%;
+    --ring: 160 100% 42%;
+    --radius: 1rem;
+  }
+
+  .dark {
+    --background: 220 18% 8%;
+    --foreground: 220 10% 95%;
+    --card: 220 16% 12%;
+    --card-foreground: 220 10% 95%;
+    --muted: 220 14% 18%;
+    --muted-foreground: 220 10% 55%;
+    --border: 220 12% 20%;
+    --accent: 160 100% 42%;
+    --accent-foreground: 220 18% 8%;
+    --premium: 230 90% 62%;
+    --destructive: 0 78% 62%;
+    --success: 160 84% 39%;
+    --warning: 38 92% 50%;
+    --ring: 160 100% 42%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "tnum" on, "lnum" on;
+    overscroll-behavior: none;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply border border-white/10 bg-white/60 backdrop-blur-xl dark:bg-white/5;
+  }
+
+  .shadow-card {
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.04),
+      0 4px 16px rgba(0, 0, 0, 0.06);
+  }
+
+  .dark .shadow-card {
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.2),
+      0 4px 16px rgba(0, 0, 0, 0.3);
+  }
+
+  .safe-top {
+    padding-top: max(1rem, env(safe-area-inset-top));
+  }
+
+  .safe-bottom {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
