@@ -1,27 +1,66 @@
 "use client";
 
-import { useState } from "react";
-import { Wallet, TrendingUp } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Wallet, TrendingUp, Pencil, Trash2 } from "lucide-react";
 import { AppHeader } from "@/components/layout/app-header";
+import { BottomSheet } from "@/components/shared/bottom-sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useFinanceStore } from "@/stores/finance-store";
+import { useUIStore } from "@/stores/ui-store";
 import { useDashboard } from "@/hooks/use-dashboard";
 import { formatMoney } from "@/lib/utils";
 import { MONTH_NAMES } from "@/lib/constants";
+import type { MonthlyIncome } from "@/types";
 
 export default function SalaryPage() {
   const income = useFinanceStore((s) => s.income);
   const incomeHistory = useFinanceStore((s) => s.incomeHistory);
   const setIncome = useFinanceStore((s) => s.setIncome);
+  const updateIncomeHistory = useFinanceStore((s) => s.updateIncomeHistory);
+  const deleteIncomeHistory = useFinanceStore((s) => s.deleteIncomeHistory);
+  const setHideBottomNav = useUIStore((s) => s.setHideBottomNav);
   const { stats } = useDashboard();
+
   const [editing, setEditing] = useState(false);
   const [salary, setSalary] = useState(String(income?.salary ?? 0));
   const [extra, setExtra] = useState(String(income?.extra_income ?? 0));
+  const [selectedHistory, setSelectedHistory] = useState<MonthlyIncome | null>(null);
+  const [histSalary, setHistSalary] = useState("");
+  const [histExtra, setHistExtra] = useState("");
+
+  useEffect(() => {
+    setHideBottomNav(editing || !!selectedHistory);
+    return () => setHideBottomNav(false);
+  }, [editing, selectedHistory, setHideBottomNav]);
+
+  useEffect(() => {
+    if (selectedHistory) {
+      setHistSalary(String(selectedHistory.salary));
+      setHistExtra(String(selectedHistory.extra_income));
+    }
+  }, [selectedHistory]);
 
   const handleSave = () => {
     setIncome({ salary: Number(salary), extra_income: Number(extra) });
     setEditing(false);
+  };
+
+  const handleSaveHistory = () => {
+    if (!selectedHistory) return;
+    updateIncomeHistory(selectedHistory.id, {
+      salary: Number(histSalary),
+      extra_income: Number(histExtra),
+    });
+    setSelectedHistory(null);
+  };
+
+  const handleDeleteHistory = () => {
+    if (!selectedHistory) return;
+    if (confirm(`Удалить запись за ${MONTH_NAMES[selectedHistory.month - 1]}?`)) {
+      deleteIncomeHistory(selectedHistory.id);
+      setSelectedHistory(null);
+    }
   };
 
   return (
@@ -60,14 +99,11 @@ export default function SalaryPage() {
         <p className={`mt-2 text-2xl font-bold tabular-nums ${stats.balanceAfterAll >= 0 ? "text-success" : "text-destructive"}`}>
           {formatMoney(stats.balanceAfterAll)}
         </p>
-        <p className="mt-1 text-xs text-muted-foreground">
-          Доход − платежи − накопления
-        </p>
       </div>
 
       {editing ? (
         <div className="mx-5 space-y-3 rounded-3xl border border-border/50 bg-card p-5">
-          <h3 className="font-semibold">Редактировать доход</h3>
+          <h3 className="font-semibold">Текущий месяц</h3>
           <Input placeholder="Зарплата" type="number" value={salary} onChange={(e) => setSalary(e.target.value)} />
           <Input placeholder="Доп. доход" type="number" value={extra} onChange={(e) => setExtra(e.target.value)} />
           <div className="flex gap-3">
@@ -77,37 +113,51 @@ export default function SalaryPage() {
         </div>
       ) : (
         <div className="px-5">
-          <Button onClick={() => setEditing(true)} className="w-full">
-            Изменить доход
-          </Button>
+          <Button onClick={() => setEditing(true)} className="w-full">Изменить доход</Button>
         </div>
       )}
 
-      <div className="mt-6 px-5">
+      <div className="mt-6 px-5 pb-4">
         <h3 className="mb-3 font-semibold">История</h3>
+        <p className="mb-3 text-xs text-muted-foreground">Нажмите на месяц, чтобы изменить или удалить</p>
         <div className="space-y-2">
           {incomeHistory.map((h) => (
-            <div
+            <button
               key={h.id}
-              className="flex items-center justify-between rounded-2xl border border-border/50 bg-card p-4"
+              onClick={() => setSelectedHistory(h)}
+              className="flex w-full items-center justify-between rounded-2xl border border-border/50 bg-card p-4 text-left"
             >
-              <span className="font-medium">
-                {MONTH_NAMES[h.month - 1]} {h.year}
-              </span>
-              <div className="text-right">
-                <p className="font-bold tabular-nums">
-                  {formatMoney(h.salary + h.extra_income)}
-                </p>
-                {h.extra_income > 0 && (
-                  <p className="text-xs text-muted-foreground">
-                    +{formatMoney(h.extra_income)} доп.
-                  </p>
-                )}
+              <span className="font-medium">{MONTH_NAMES[h.month - 1]} {h.year}</span>
+              <div className="flex items-center gap-2 text-right">
+                <div>
+                  <p className="font-bold tabular-nums">{formatMoney(h.salary + h.extra_income)}</p>
+                  {h.extra_income > 0 && (
+                    <p className="text-xs text-muted-foreground">+{formatMoney(h.extra_income)} доп.</p>
+                  )}
+                </div>
+                <Pencil className="h-4 w-4 text-muted-foreground" />
               </div>
-            </div>
+            </button>
           ))}
         </div>
       </div>
+
+      <BottomSheet
+        open={!!selectedHistory}
+        onClose={() => setSelectedHistory(null)}
+        title={selectedHistory ? `${MONTH_NAMES[selectedHistory.month - 1]} ${selectedHistory.year}` : ""}
+      >
+        {selectedHistory && (
+          <div className="space-y-3">
+            <Input placeholder="Зарплата" type="number" value={histSalary} onChange={(e) => setHistSalary(e.target.value)} />
+            <Input placeholder="Доп. доход" type="number" value={histExtra} onChange={(e) => setHistExtra(e.target.value)} />
+            <Button className="w-full" onClick={handleSaveHistory}>Сохранить</Button>
+            <Button variant="destructive" className="w-full gap-2" onClick={handleDeleteHistory}>
+              <Trash2 className="h-4 w-4" /> Удалить запись
+            </Button>
+          </div>
+        )}
+      </BottomSheet>
     </div>
   );
 }

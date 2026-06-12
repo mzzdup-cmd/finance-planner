@@ -112,9 +112,32 @@ export interface VacationExpense {
   user_id: string;
   title: string;
   amount: number;
+  paid_amount: number;
   expense_type: VacationExpenseType;
   expense_date: string | null;
+  duration: string | null;
+  comment: string | null;
   is_planned: boolean;
+}
+
+/** Отложено за месяц + траты из этой суммы */
+export interface TripMonthlySaving {
+  id: string;
+  trip_id: string;
+  year: number;
+  month: number;
+  saved_amount: number;
+  payments: { id: string; title: string; amount: number; note: string | null }[];
+}
+
+/** Счёт от зарплаты при планировании поездки */
+export interface TripSalaryEntry {
+  id: string;
+  trip_id: string;
+  label: string;
+  salary: number;
+  savings_set_aside: number;
+  other_expenses: number;
 }
 
 export interface AppNotification {
@@ -159,4 +182,40 @@ export interface CategoryBreakdown {
   amount: number;
   color: string;
   percent: number;
+}
+
+/** Планируемая трата в планировщике месяца */
+export interface PlannedExpense {
+  id: string;
+  title: string;
+  amount: number;
+}
+
+/** План на конкретный месяц (будущие месяцы) */
+export interface MonthPlan {
+  id: string;
+  year: number;
+  month: number;
+  salary: number;
+  extra_income: number;
+  expenses: PlannedExpense[];
+  note: string | null;
+}
+
+/** Платёж по долгу (рассрочка, Долями и т.д.) */
+export interface DebtInstallment {
+  id: string;
+  due_date: string;
+  amount: number;
+  is_paid: boolean;
+}
+
+/** Долг / рассрочка */
+export interface Debt {
+  id: string;
+  title: string;
+  total_amount: number;
+  remaining_amount: number;
+  color: string;
+  installments: DebtInstallment[];
 }

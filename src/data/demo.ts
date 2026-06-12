@@ -136,11 +136,11 @@ export const demoTrips: VacationTrip[] = [
 ];
 
 export const demoExpenses: VacationExpense[] = [
-  { id: "exp-001", trip_id: "trip-001", user_id: DEMO_USER_ID, title: "Авиабилеты туда-обратно", amount: 85000, expense_type: "tickets", expense_date: null, is_planned: true },
-  { id: "exp-002", trip_id: "trip-001", user_id: DEMO_USER_ID, title: "Отель Rixos 13 ночей", amount: 120000, expense_type: "accommodation", expense_date: null, is_planned: true },
-  { id: "exp-003", trip_id: "trip-001", user_id: DEMO_USER_ID, title: "Трансфер", amount: 8000, expense_type: "transport", expense_date: null, is_planned: true },
-  { id: "exp-004", trip_id: "trip-001", user_id: DEMO_USER_ID, title: "Экскурсии", amount: 25000, expense_type: "entertainment", expense_date: null, is_planned: true },
-  { id: "exp-005", trip_id: "trip-001", user_id: DEMO_USER_ID, title: "Сувениры и шопинг", amount: 12000, expense_type: "shopping", expense_date: null, is_planned: true },
+  { id: "exp-001", trip_id: "trip-001", user_id: DEMO_USER_ID, title: "Авиабилеты туда-обратно", amount: 85000, paid_amount: 85000, expense_type: "tickets", expense_date: null, duration: "11ч", comment: "Самолёт", is_planned: true },
+  { id: "exp-002", trip_id: "trip-001", user_id: DEMO_USER_ID, title: "Отель Rixos 13 ночей", amount: 120000, paid_amount: 60000, expense_type: "accommodation", expense_date: null, duration: "13 дней", comment: "All inclusive", is_planned: true },
+  { id: "exp-003", trip_id: "trip-001", user_id: DEMO_USER_ID, title: "Трансфер", amount: 8000, paid_amount: 0, expense_type: "transport", expense_date: null, duration: null, comment: null, is_planned: true },
+  { id: "exp-004", trip_id: "trip-001", user_id: DEMO_USER_ID, title: "Экскурсии", amount: 25000, paid_amount: 0, expense_type: "entertainment", expense_date: null, duration: null, comment: null, is_planned: true },
+  { id: "exp-005", trip_id: "trip-001", user_id: DEMO_USER_ID, title: "Сувениры и шопинг", amount: 12000, paid_amount: 0, expense_type: "shopping", expense_date: null, duration: null, comment: null, is_planned: true },
 ];
 
 export const demoNotifications: AppNotification[] = [

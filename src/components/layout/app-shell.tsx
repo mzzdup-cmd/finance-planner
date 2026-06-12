@@ -7,7 +7,7 @@ import { useHydrate } from "@/hooks/use-hydrate";
 import { useUIStore } from "@/stores/ui-store";
 
 /** Sub-pages hide bottom navigation for cleaner back-navigation UX */
-const HIDE_NAV_PATHS = ["/salary", "/vacation", "/analytics", "/notifications", "/settings"];
+const HIDE_NAV_PATHS = ["/salary", "/planner", "/debts", "/vacation", "/analytics", "/notifications", "/settings"];
 
 interface AppShellProps {
   children: React.ReactNode;

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import {
   Wallet, Plane, BarChart3, Bell, Settings,
-  ChevronRight, Moon, Sun,
+  ChevronRight, Moon, Sun, CalendarRange, Landmark,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { AppHeader } from "@/components/layout/app-header";
@@ -13,7 +13,7 @@ import { useFinanceStore } from "@/stores/finance-store";
 import { formatMoney } from "@/lib/utils";
 
 const ICONS = {
-  Wallet, Plane, BarChart3, Bell, Settings,
+  Wallet, Plane, BarChart3, Bell, Settings, CalendarRange, Landmark,
 };
 
 export default function MorePage() {

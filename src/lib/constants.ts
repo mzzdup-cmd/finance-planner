@@ -54,6 +54,8 @@ export const BOTTOM_NAV_ITEMS = [
 
 export const MORE_MENU_ITEMS = [
   { href: "/salary", label: "Зарплата", icon: "Wallet", description: "Доходы и история" },
+  { href: "/planner", label: "Планировщик", icon: "CalendarRange", description: "Прогноз на будущие месяцы" },
+  { href: "/debts", label: "Долги", icon: "Landmark", description: "Долями, рассрочки, кредиты" },
   { href: "/vacation", label: "Отпуск", icon: "Plane", description: "Планировщик поездок" },
   { href: "/analytics", label: "Аналитика", icon: "BarChart3", description: "Графики и прогноз" },
   { href: "/notifications", label: "Уведомления", icon: "Bell", description: "Напоминания" },
