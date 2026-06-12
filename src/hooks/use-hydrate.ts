@@ -10,7 +10,16 @@ export function useHydrate() {
   const setShowSplash = useUIStore((s) => s.setShowSplash);
 
   useEffect(() => {
-    hydrate();
+    // Сначала ждём localStorage, потом hydrate — иначе демо затирает удаления
+    const runHydrate = () => hydrate();
+
+    if (useFinanceStore.persist.hasHydrated()) {
+      runHydrate();
+      return;
+    }
+
+    const unsub = useFinanceStore.persist.onFinishHydration(runHydrate);
+    return unsub;
   }, [hydrate]);
 
   useEffect(() => {

@@ -75,24 +75,16 @@ export const useFinanceStore = create<FinanceState>()(
         if (get().isHydrated) return;
         set({ isLoading: true });
 
-        if (isDemoMode()) {
-          set({
-            profile: demoProfile,
-            income: demoIncome,
-            incomeHistory: demoIncomeHistory,
-            payments: demoPayments,
-            goals: demoGoals,
-            trips: demoTrips,
-            expenses: demoExpenses,
-            notifications: demoNotifications,
-            isHydrated: true,
-            isLoading: false,
-          });
+        const state = get();
+
+        // Уже есть сохранённые данные — не затираем демо при каждом обновлении
+        if (state.payments.length > 0 || state.profile) {
+          set({ isHydrated: true, isLoading: false });
           return;
         }
 
-        // Supabase hydration would go here
-        set({
+        // Первый визит — загружаем демо-данные
+        const seed = {
           profile: demoProfile,
           income: demoIncome,
           incomeHistory: demoIncomeHistory,
@@ -101,9 +93,13 @@ export const useFinanceStore = create<FinanceState>()(
           trips: demoTrips,
           expenses: demoExpenses,
           notifications: demoNotifications,
-          isHydrated: true,
-          isLoading: false,
-        });
+        };
+
+        if (!isDemoMode()) {
+          // TODO: загрузка из Supabase для авторизованных пользователей
+        }
+
+        set({ ...seed, isHydrated: true, isLoading: false });
       },
 
       setSelectedMonth: (key) => set({ selectedMonthKey: key }),
@@ -223,6 +219,7 @@ export const useFinanceStore = create<FinanceState>()(
         profile: s.profile,
         selectedMonthKey: s.selectedMonthKey,
         income: s.income,
+        incomeHistory: s.incomeHistory,
         payments: s.payments,
         goals: s.goals,
         trips: s.trips,
